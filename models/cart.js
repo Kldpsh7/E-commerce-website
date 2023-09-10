@@ -8,7 +8,7 @@ const p = path.join(
   );
 
 module.exports = class Cart {
-    static addProduct(id,productPrice){
+    static addProduct(id,title,img,productPrice){
         //fetch th eprevious cart
         fs.readFile(p , (err,fileContent)=>{
             var cart= {products:[],total:0};
@@ -28,11 +28,21 @@ module.exports = class Cart {
                 cart.products[existingProductIndex]=updatedProduct;
             }
             else{
-                updatedProduct = {id:id , qty:1}
+                updatedProduct = {id:id , title:title , img:img , qty:1 , price:productPrice}
                 cart.products.push(updatedProduct);
             }
             cart.total = cart.total + +productPrice;
             fs.writeFile(p,JSON.stringify(cart),err=>console.log(err))
+        })
+    }
+    static getCartItems(cb){
+        fs.readFile(p,(err,content)=>{
+            if (err){
+                cb()
+            }
+            else{
+                cb(JSON.parse(content))
+            }
         })
     }
 }

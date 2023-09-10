@@ -1,0 +1,40 @@
+h1{
+    text-align: center;
+    color: #313335;
+}
+.centered{
+    text-align: center;
+    font-family: sans-serif;
+    width: 45rem;
+    border: 2px solid rosybrown;
+    border-radius: 4px;
+    padding-bottom: 2.5rem;
+    background: #c9def4;
+    margin-top: 1rem;
+}
+.list{
+    list-style: none;
+    width: 40rem;
+    text-align: center;
+    margin: auto;
+}
+.item{
+    margin: 50px;
+    border-radius: 3px;
+}
+.title{
+    float: left;
+    margin-top: 0.8rem;
+}
+.qty{
+    float: right;
+    margin-top: 0.8rem;
+}
+.img{
+    height: 50px;
+    float: left;
+}
+.amt{
+    float: right;
+    margin-top: 0.8rem;
+}
