@@ -5,19 +5,25 @@
     <body>
         <%- include('../includes/navigation.ejs') %>
         <main class="centered">
-            <% if (cart) { %>
-                <h1 >Total Amount = $<%= cart.total %></h1>
+            <% if (products.length >0 ) { %>
+                <h1>ITEMS IN CART</h1>
                 <ul class="list" >
-                    <% for (let item of cart.products) { %>
+                    <% products.forEach (p => { %>
                         <li class="item" >
-                            <img class="img" src="<%= item.img %>" alt="<%= item.title %>">
-                            <h3 class="title"><%= item.title %></h3>
-                            <h3 class="amt">&nbsp;&nbsp;&nbsp;Total = $<%= item.price*item.qty %></h3>
-                            <h3 class="qty">Qty : <%= item.qty %></h3>
+                            <h3 class="title"><%= p.title %></h3>
+                            <form action="/cart-delete-item" method="POST">
+                                <input type="hidden" value="<%= p.id %>" name="productId">
+                                <button class="btn" type="submit" style="float: right; margin-top: 0.5rem; margin-left: 1rem;">Delete</button>
+                                <h3 class="qty">Qty : <%= p.cartItem.quantity %></h3>
+                            </form>
                         </li>
                         <br>
-                    <% } %>
+                    <% }) %>
+                    <hr style="margin-top: 2rem; width: 38rem;">
                     </ul>
+                    <form action="/orders" method="POST">
+                        <button class="btn" type="submit" style="margin-top: 3rem;">Order Now!</button>
+                    </form>
             <% } else { %>
                 <h1>Nothing Here...</h1>
             <% } %>

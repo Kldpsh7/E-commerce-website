@@ -16,19 +16,21 @@ exports.postAddProduct = (req, res, next) => {
   const imageUrl = req.body.imageUrl;
   const price = req.body.price;
   const description = req.body.description;
-  const product = new Product(title, imageUrl, description, price);
-  product.save()
-  .then(()=>res.redirect('/'))
-  .catch(err => console.log(err))
+  Product.create({
+    title : title,
+    price : price,
+    imageUrl : imageUrl,
+    description : description
+  }).then().catch(err=>console.log(err))
 };
 
 exports.getEditProduct =(req,res,next) =>{
   const prodId = req.params.productId;
   const editMode = req.query.edit;
-  Product.findById(prodId)
+  Product.findByPk(prodId)
   .then(d=>{
     res.render('admin/edit-product',{
-      product:d[0][0],
+      product:d,
       pageTitle:'Edit Product',
       path:'/admin/edit-product',
       editing:editMode
@@ -44,31 +46,44 @@ exports.postEditProduct = (req,res,next) => {
   const Uimg = req.body.imageUrl;
   const Uprice = req.body.price;
   const Udesc = req.body.description;
-  const Uprod = new Product(prodId, Utitle, Uimg , Udesc , Uprice);
   if(!editMode){
-    Uprod.save()
-  .then(()=>res.redirect('/admin/products'))
+    req.user.createProduct({
+      title : Utitle,
+      price : Uprice,
+      imageUrl : Uimg,
+      description : Udesc
+    }).then(()=>res.redirect('/admin/products'))
   .catch(err=>console.log(err))
   }
   else{
-    Uprod.update()
-    .then(()=> res.redirect('/admin/products'))
+    Product.findByPk(prodId)
+    .then(d => {
+      d.title = Utitle;
+      d.imageUrl=Uimg;
+      d.price=Uprice;
+      d.description=Udesc;
+      return d.save()
+    })
+    .then(()=>res.redirect('/admin/products'))
     .catch(err=>console.log(err))
   }
 }
 
 exports.postDeleteProduct = (req,res,next)=>{
   const prodId = req.params.productId;
-  Product.deleteById(prodId)
+  Product.findByPk(prodId)
+  .then(d=>{
+    return d.destroy()
+  })
   .then(()=>res.redirect('/admin/products'))
   .catch(err=>console.log(err))
 }
 
 exports.getProducts = (req, res, next) => {
-  Product.fetchAll()
+  Product.findAll()
   .then(d=>{
     res.render('admin/products', {
-      prods: d[0],
+      prods: d,
       pageTitle: 'Admin Products',
       path: '/admin/products'
     });})
